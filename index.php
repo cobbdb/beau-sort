@@ -14,55 +14,57 @@
                 <?php
                     // Create the sample data.
                     $data = [
-                        // First by week.
-                        '13 Jun 2011' => [
-                            // Then by day.
-                            'Monday' => [[
-                                // Finally by market.
-                                'market' => 'austin',
-                                'impressions' => 123456
-                            ], [
-                                'market' => 'atlanta',
-                                'impressions' => 456124
-                            ]],
-                            'Thursday' => [[
-                                'market' => 'atlanta',
-                                'impressions' => 456789
-                            ], [
-                                'market' => 'austin',
-                                'impressions' => 456788
-                            ]],
-                            'Friday' => [[
-                                'market' => 'austin',
-                                'impressions' => 123457
-                            ], [
-                                'market' => 'atlanta',
-                                'impressions' => 456123
-                            ]]
-                        ],
-                        '20 Jun 2011' => [
-                            'Monday' => [[
-                                'market' => 'austin',
-                                'impressions' => 123456
-                            ], [
-                                'market' => 'atlanta',
-                                'impressions' => 456124
-                            ]],
-                            'Tuesday' => [[
-                                'market' => 'atlanta',
-                                'impressions' => 456789
-                            ], [
-                                'market' => 'austin',
-                                'impressions' => 456788
-                            ]],
-                            'Thursday' => [[
-                                'market' => 'austin',
-                                'impressions' => 123457
-                            ], [
-                                'market' => 'atlanta',
-                                'impressions' => 456123
-                            ]]
-                        ]
+                        // Facet by week.
+                        '13 Jun 2011' => [[
+                            'market' => 'austin',
+                            'impressions' => 123456,
+                            'date' => 'monday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456124,
+                            'date' => 'monday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456789,
+                            'date' => 'thursday'
+                        ], [
+                            'market' => 'austin',
+                            'impressions' => 456788,
+                            'date' => 'thursday'
+                        ], [
+                            'market' => 'austin',
+                            'impressions' => 123457,
+                            'date' => 'tuesday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456123,
+                            'date' => 'friday'
+                        ]],
+                        '20 Jun 2011' => [[
+                            'market' => 'austin',
+                            'impressions' => 123456,
+                            'date' => 'monday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456124,
+                            'date' => 'monday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456789,
+                            'date' => 'tuesday'
+                        ], [
+                            'market' => 'austin',
+                            'impressions' => 456788,
+                            'date' => 'tuesday'
+                        ], [
+                            'market' => 'austin',
+                            'impressions' => 123457,
+                            'date' => 'thursday'
+                        ], [
+                            'market' => 'atlanta',
+                            'impressions' => 456123,
+                            'date' => 'friday'
+                        ]]
                     ];
                 ?>
 
@@ -76,34 +78,30 @@
                     <thead>
                         <tr>
                             <th scope="col">Week Of</td>
-                            <th scope="col">Day</td>
                             <th scope="col">Impressions</td>
+                            <th scope="col">Day</td>
                             <th scope="col">Market</td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($data as $week => $documents) { ?>
-                            <?php $nWeek = 0; ?>
-                            <?php foreach ($documents as $day => $records) { ?>
-                                <?php
-                                    // Sort the day by impressions.
-                                    usort($records, function ($a, $b) {
-                                        return $b['impressions'] - $a['impressions'];
-                                    });
-                                    $nDay = 0;
-                                ?>
-                                <?php foreach ($records as $entry) { ?>
-                                    <tr>
-                                        <th scope="row"><?= $nWeek === 0 ? $week : '' ?></th>
-                                        <th scope="row"><?= $nDay === 0 ? $day : '' ?></th>
-                                        <td><?= $entry['impressions'] ?></td>
-                                        <td><?= $entry['market'] ?></td>
-                                    </tr>
-                                    <?php
-                                        $nWeek += 1;
-                                        $nDay += 1;
-                                    ?>
-                                <?php } ?>
+                            <?php
+                                // Sort the day by impressions.
+                                usort($documents, function ($a, $b) {
+                                    return $b['impressions'] - $a['impressions'];
+                                });
+
+                                // Only show week date once per document group.
+                                $nWeek = 0;
+                            ?>
+                            <?php foreach ($documents as $entry) { ?>
+                                <tr>
+                                    <th scope="row"><?= $nWeek === 0 ? $week : '' ?></th>
+                                    <td><?= $entry['impressions'] ?></td>
+                                    <td><?= $entry['date'] ?></td>
+                                    <td><?= $entry['market'] ?></td>
+                                </tr>
+                                <?php $nWeek += 1 ?>
                             <?php } ?>
                         <?php } ?>
                     </tbody>
